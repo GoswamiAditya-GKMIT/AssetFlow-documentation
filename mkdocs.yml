@@ -1,1 +1,9 @@
 site_name: Asset Allocation & Inventory Management System
+
+
+markdown_extensions:
+  - admonition        # Allows for nice boxes/notes (e.g., "Note:", "Warning:")
+  - attr_list         # Allows you to add custom IDs/classes to elements
+  - pymdownx.details  # Required for collapsible content blocks
+  - pymdownx.superfences # Enhanced code block rendering
+  - def_list          # Supports definition lists
