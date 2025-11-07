@@ -18,7 +18,8 @@ theme:
   
 # Navigation structure
 nav:
-  - Project Overview: index.md
+  - Home: index.md
+  - Project Overview: project-overview.md
   - Functional Documentation: functional-docs.md
   - Use Cases: use-cases.md
 
