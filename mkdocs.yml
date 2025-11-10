@@ -22,6 +22,7 @@ nav:
   - Project Overview: project-overview.md
   - Functional Documentation: functional-docs.md
   - Use Cases: use-cases.md
+  - Database Schema: db_schema.md
 
 
 
