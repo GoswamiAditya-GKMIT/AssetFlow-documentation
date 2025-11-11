@@ -6,97 +6,96 @@ This document describes the complete database schema for the Asset Allocation Sy
 
 # **1. Tables and Fields**
 
-## **1.1 User**
-| Field          | Type         | Description |
-|----------------|--------------|-------------|
-| id             | UUID PK      | Primary key |
-| email          | CITEXT UNIQUE| User login email |
-| password_hash  | TEXT         | Hashed password |
-| full_name      | TEXT         | Full name |
-| role           | user_role    | admin / employee |
-| deleted_at     | TIMESTAMPTZ  | Soft delete timestamp |
-| created_at     | TIMESTAMPTZ  | Created timestamp |
-| updated_at     | TIMESTAMPTZ  | Updated timestamp |
+# **1.1 User**
+
+| Field         | Type               | Description |
+|---------------|--------------------|-------------|
+| id            | UUID PK            | User ID |
+| email         | CITEXT UNIQUE      | User email |
+| password_hash | TEXT               | Hashed password |
+| full_name     | TEXT               | Full name |
+| role          | user_role ENUM     | admin or employee |
+| employee_code | TEXT UNIQUE        | Employee ID/code |
+| phone         | TEXT               | Phone number |
+| deleted_at    | TIMESTAMPTZ        | Soft delete timestamp |
+| created_at    | TIMESTAMPTZ        | Creation timestamp |
+| updated_at    | TIMESTAMPTZ        | Last update timestamp |
+
 
 **Indexes**
 - idx_user_role on (role)
 
 ---
 
-## **1.2 employee_profile**
-| Field          | Type     | Description |
-|----------------|----------|-------------|
-| user_id        | UUID PK/FK(User.id) | Linked to User |
-| employee_code  | TEXT UNIQUE | Employee code |
-| employee_name  | TEXT NOT NULL | Employee name |
-| phone          | TEXT | Mobile number |
+# **1.2 password_reset_token**
 
----
+| Field       | Type                 | Description |
+|-------------|----------------------|-------------|
+| id          | UUID PK              | Token ID |
+| user_id     | UUID FK(User.id)     | Linked user |
+| token       | TEXT UNIQUE          | Password reset token |
+| expires_at  | TIMESTAMPTZ          | Expiration time |
+| used_at     | TIMESTAMPTZ          | When token was used |
+| created_at  | TIMESTAMPTZ          | Creation timestamp |
 
-## **1.3 password_reset_token**
-| Field        | Type         | Description |
-|--------------|--------------|-------------|
-| id           | UUID PK      | Token ID |
-| user_id      | UUID FK(User.id) | User |
-| token        | TEXT UNIQUE  | Reset token |
-| expires_at   | TIMESTAMPTZ  | Expiry |
-| used_at      | TIMESTAMPTZ  | When used |
-| created_at   | TIMESTAMPTZ  | Creation |
 
 **Indexes**
 - idx_password_reset_user on (user_id)
 
 ---
 
-## **1.4 asset_category**
-| Field        | Type         | Description |
-|--------------|--------------|-------------|
-| id           | SERIAL PK    | Category ID |
-| name         | TEXT UNIQUE  | Category name |
-| description  | TEXT         | Description |
-| created_at   | TIMESTAMPTZ  | Created |
-| updated_at   | TIMESTAMPTZ  | Updated |
+# **1.3 asset_category**
+
+| Field       | Type          | Description |
+|-------------|---------------|-------------|
+| id          | SERIAL PK     | Category ID |
+| name        | TEXT UNIQUE   | Category name |
+| description | TEXT          | Description |
+| created_at  | TIMESTAMPTZ   | Creation timestamp |
+| updated_at  | TIMESTAMPTZ   | Last update timestamp |
+
 
 ---
 
-## **1.5 asset**
-| Field          | Type            | Description |
-|----------------|------------------|-------------|
-| id             | UUID PK          | Asset ID |
-| category_id    | INT FK(asset_category.id) | Category |
-| name           | TEXT NOT NULL    | Asset name |
-| tag_code       | TEXT UNIQUE      | Internal tag |
-| serial_number  | TEXT UNIQUE      | Serial number |
-| status         | asset_status     | Current status |
-| purchase_date  | DATE             | Purchase date |
-| purchase_cost  | NUMERIC(12,2)    | Cost |
-| warranty_expiry| DATE             | Warranty |
-| specs          | JSONB            | Specifications |
-| created_at     | TIMESTAMPTZ      | Created |
-| updated_at     | TIMESTAMPTZ      | Updated |
+# **1.4 asset**
+
+| Field           | Type                  | Description |
+|-----------------|------------------------|-------------|
+| id              | UUID PK               | Asset ID |
+| category_id     | INT FK(asset_category.id) | Category |
+| name            | TEXT                  | Asset name |
+| tag_code        | TEXT UNIQUE           | Tag/code identifier |
+| serial_number   | TEXT UNIQUE           | Serial number |
+| status          | asset_status ENUM     | Asset status |
+| purchase_date   | DATE                  | Purchase date |
+| purchase_cost   | NUMERIC(12,2)         | Cost |
+| warranty_expiry | DATE                  | Warranty expiry |
+| specs           | JSONB                 | Specifications |
+| created_at      | TIMESTAMPTZ           | Creation timestamp |
+| updated_at      | TIMESTAMPTZ           | Last update timestamp |
+| deleted_at      | TIMESTAMPTZ           | Soft delete timestamp |
+
 
 **Indexes**
 - idx_asset_category  
 - idx_asset_status
 
 ---
+# **1.5 allocation**
 
-## **1.6 asset_allocation**
-| Field               | Type     | Description |
-|---------------------|----------|-------------|
-| id                  | UUID PK  | Allocation ID |
-| asset_id            | UUID FK(asset.id) | Target asset |
-| employee_id         | UUID FK(User.id) | Employee |
-| allocated_by        | UUID FK(User.id) | Admin |
-| allocation_date     | DATE | Date of allocation |
-| expected_return_date| DATE | Expected return |
-| returned_at         | TIMESTAMPTZ | When returned |
-| notes               | TEXT | Extra notes |
-| created_at          | TIMESTAMPTZ | Created |
-| updated_at          | TIMESTAMPTZ | Updated |
+| Field          | Type                      | Description |
+|----------------|---------------------------|-------------|
+| id             | UUID PK                  | Allocation ID |
+| asset_id       | UUID FK(asset.id)        | Asset |
+| employee_id    | UUID FK(User.id)         | Allocated to |
+| allocated_by   | UUID FK(User.id)         | Allocated by |
+| allocation_date| DATE                     | Allocation date |
+| returned_at    | TIMESTAMPTZ              | When returned |
+| notes          | TEXT                     | Extra notes |
+| created_at     | TIMESTAMPTZ              | Creation timestamp |
+| updated_at     | TIMESTAMPTZ              | Last update timestamp |
+| deleted_at     | TIMESTAMPTZ              | Soft delete timestamp |
 
-**Constraints**
-- chk_alloc_self_assign (employee_id <> allocated_by)
 
 **Indexes**
 - uq_open_allocation_per_asset (partial unique)  
@@ -104,17 +103,19 @@ This document describes the complete database schema for the Asset Allocation Sy
 
 ---
 
-## **1.7 return_request (Option B)**
-| Field        | Type         | Description |
-|--------------|--------------|-------------|
-| id           | UUID PK      | Request ID |
-| allocation_id| UUID FK(asset_allocation.id) | Allocation |
-| requested_by | UUID FK(User.id) | Employee |
-| description  | TEXT | Details |
-| approved_at  | TIMESTAMPTZ | Approval timestamp (NULL = pending) |
-| approval_note| TEXT | Admin note |
-| created_at   | TIMESTAMPTZ | Created |
-| updated_at   | TIMESTAMPTZ | Updated |
+# **1.6 return_request**
+
+| Field         | Type                       | Description |
+|---------------|-----------------------------|-------------|
+| id            | UUID PK                    | Request ID |
+| allocation_id | UUID FK(allocation.id)     | Related allocation |
+| requested_by  | UUID FK(User.id)           | Request raised by |
+| description   | TEXT                       | Description/details |
+| approved_at   | TIMESTAMPTZ                | Approval time (NULL = pending) |
+| decision_note | TEXT                       | Admin note |
+| created_at    | TIMESTAMPTZ                | Creation timestamp |
+| updated_at    | TIMESTAMPTZ                | Last update timestamp |
+
 
 **Indexes**
 - idx_return_request_pending (partial)
@@ -124,17 +125,19 @@ This document describes the complete database schema for the Asset Allocation Sy
 
 ---
 
-## **1.8 asset_history**
-| Field        | Type                  | Description |
-|--------------|------------------------|-------------|
-| id           | BIGSERIAL PK          | History ID |
-| asset_id     | UUID FK(asset.id)     | Asset |
-| user_id      | UUID FK(User.id)      | Performed by |
-| event_type   | asset_history_event   | Event name |
-| from_status  | asset_status          | Previous status |
-| to_status    | asset_status          | Updated status |
-| metadata     | JSONB                 | Extra details |
-| occurred_at  | TIMESTAMPTZ           | Timestamp |
+# **1.7 asset_history**
+
+| Field        | Type                           | Description |
+|--------------|----------------------------------|-------------|
+| id           | BIGSERIAL PK                    | History ID |
+| asset_id     | UUID FK(asset.id)               | Related asset |
+| user_id      | UUID FK(User.id)                | Performed by |
+| event_type   | asset_history_event ENUM        | Event type |
+| from_status  | asset_status ENUM               | Previous status |
+| to_status    | asset_status ENUM               | New status |
+| metadata     | JSONB                           | Extra data |
+| occurred_at  | TIMESTAMPTZ                     | When it happened |
+
 
 **Indexes**
 - idx_asset_history_asset_time
@@ -143,7 +146,7 @@ This document describes the complete database schema for the Asset Allocation Sy
 
 # **2. ER Diagram**
 
-![ER Diagram](media/asset_allocation_system-2025-11-09-173834.png)
+![ER Diagram](media/asset_er_diagram.png)
 
 ---
 
@@ -205,7 +208,7 @@ Values:
 ---
 
 ### **uq_open_allocation_per_asset (UNIQUE PARTIAL)**  
-On: `asset_allocation(asset_id)`  
+On: `allocation(asset_id)`  
 Where: `returned_at IS NULL`
 
 **Why:** Enforces “only one active allocation per asset” at the database level.
@@ -213,7 +216,7 @@ Where: `returned_at IS NULL`
 ---
 
 ### **idx_alloc_employee_open (PARTIAL)**  
-On: `asset_allocation(employee_id)`  
+On: `allocation(employee_id)`  
 Where: `returned_at IS NULL`
 
 **Why:** Instant fetch of “assets currently allocated to an employee.”
@@ -254,21 +257,21 @@ Applied On:
 
 # **6. Views**
 
-## **6.1 vw_current_allocations**
+## **6.1 current_allocations**
 Shows all active (not returned) asset allocations, including asset & employee details.
 
 **Why:** Simplifies dashboard queries for “who is holding what right now.”
 
 ---
 
-## **6.2 vw_asset_status_counts**
+## **6.2 asset_status_counts**
 Returns counts of assets grouped by their `status`.
 
 **Why:** Used to populate overview statistics on the dashboard.
 
 ---
 
-## **6.3 vw_pending_return_requests**
+## **6.3 pending_return_requests**
 Lists all return requests where `approved_at IS NULL`.
 
 **Why:** Powers the admin’s "Pending Approvals" screen with a single efficient query.
