@@ -22,7 +22,16 @@ nav:
   - Functional Documentation: functional-docs.md
   - Use Cases: use-cases.md
   - Database Schema: db_schema.md
-
+  - Technical Documentation: 
+      # The nested list of pages below the heading
+      - Tech Stack : tech-stack.md
+      - AWS Architecture: aws-architecture.md
+      - Data Flow Diagram: DFD.md
+      - API Endpoints: api-endpoints.md
+      - Sequence Diagram: sequence.md
+      - Authentication and Authorization: auth.md
+      
+    
 
 
 # Extensions for clean formatting (like better lists and notes)
