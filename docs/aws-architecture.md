@@ -1,6 +1,6 @@
 # **AWS Architecture Diagram**
 
-![AWS Architecture Diagram](media/Final-AWS-ARC.png)
+![AWS Architecture Diagram](media/final-aws-arch.png)
 
 
 
