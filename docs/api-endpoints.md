@@ -106,8 +106,3 @@
   Approve return request
 
 ---
-
-## Dashboard
-
-- **GET** `/dashboard/summary`  
-  Fetch dashboard statistics
