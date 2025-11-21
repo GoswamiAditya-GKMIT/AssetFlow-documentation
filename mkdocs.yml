@@ -28,7 +28,6 @@ nav:
       - AWS Architecture: aws-architecture.md
       - Data Flow Diagram: DFD.md
       - API Endpoints: api-endpoints.md
-      - Sequence Diagram: sequence.md
       - Authentication and Authorization: auth.md
       
     
