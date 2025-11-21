@@ -1,6 +1,6 @@
 # **AWS Architecture Diagram**
 
-![AWS Architecture Diagram](media/final-aws-arch.png)
+![AWS Architecture Diagram](media/aws_demo_final.png)
 
 
 
@@ -16,7 +16,6 @@ A secure and CI/CD-enabled AWS setup for backend deployment with DNS routing, em
 | **Public Subnet** | Hosts EC2; RDS is accessible only inside the same VPC. |
 | **Security Groups** | Strict inbound/outbound control ensuring least privilege. |
 | **CI/CD via GitHub Actions** | Automates testing and deployment to EC2. |
-| **SES + Route 53** | Handles email delivery and DNS resolution. |
 
 ---
 
@@ -49,12 +48,6 @@ A secure and CI/CD-enabled AWS setup for backend deployment with DNS routing, em
 
 ---
 
-## 4. Email (Amazon SES)
-
-- Backend uses **SES** for transactional emails (e.g., password reset).  
-- Outbound-only communication — credentials stay private.
-
----
 
 ##  5. CI/CD Flow
 
@@ -70,13 +63,12 @@ A secure and CI/CD-enabled AWS setup for backend deployment with DNS routing, em
 | :--- | :--- | :--- |
 | **EC2** | Allow HTTP/HTTPS | Public access. |
 | **RDS** | Port 5432 (VPC-only) | Backend-only DB access. |
-| **SES** | Outbound only | Secure email delivery. |
 
 ---
 
 ##  Data Flow
 
-**Users → Route 53 → EC2 → RDS → SES**  
+**Users → Route 53 → EC2 → RDS**  
 **GitHub Actions → EC2 (CI/CD Deployment)**
 
 ---
