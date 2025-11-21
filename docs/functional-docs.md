@@ -10,14 +10,12 @@
 - Approve asset return requests  
 - View employee profiles and assigned assets  
 - Manage asset categories  
-- View asset history & status  
 
 ### Employee
 
 - View assigned assets  
 - Submit return request (Reason: **No longer required** / **Asset is damaged**)  
 - View request status  
-- View asset history  
 ---
 ## **Functional Modules**
 
@@ -59,8 +57,8 @@
 - Admin views list of pending return requests  
 - Admin reviews reason and details  
 - On approval:  
-  * If **No longer required** → asset becomes `available`  
-  * If **Asset is damaged** → asset becomes `damaged` or `under_repair`  
+  asset becomes `available`  , `damaged` 
+  
 
 ### 7. Basic Admin Dashboard
 

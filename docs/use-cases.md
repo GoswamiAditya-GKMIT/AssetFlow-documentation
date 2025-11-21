@@ -38,7 +38,6 @@
 3. Sets issue date (return date = NULL by default)  
 4. System saves allocation  
 5. Asset status changes to **assigned**  
-6. Notify employee via email  
 
 ---
 
@@ -54,7 +53,6 @@
     - No longer required  
     - Asset got damaged  
 4. Adds a short description  
-5. Admin notified via email  
 
 ---
 
@@ -68,9 +66,8 @@
 2. Admin reviews reason and details  
 3. Admin approves  
 4. On Approval:  
-    - If **No longer required** → asset marked **available**  
-    - If **Asset is damaged** → asset marked **damaged** or **under_repair**  
-5. Notify employee via email  
+    -  → asset marked **available**  
+ 
 
 ---
 
@@ -82,7 +79,6 @@
 ### Main Flow
 1. Admin opens dashboard  
 2. System fetches real-time statistics  
-3. Graphs displayed (Optional)
 
 ---
 
@@ -116,20 +112,4 @@
 
 ---
 
-## Use Case 9: Notification / Communication
 
-**Actor:** System (Automated), Admin, Employee  
-**Description:** System sends email notifications for important events.
-
-### Main Flow
-1. Trigger event occurs:  
-    - Asset allocated  
-    - Return request submitted  
-    - Return request approved or rejected  
-    - Password reset requested  
-    - Employee account created  
-2. System generates notification  
-3. System sends email to recipient  
- 
-
----
