@@ -29,6 +29,7 @@ nav:
       - Data Flow Diagram: DFD.md
       - API Endpoints: api-endpoints.md
       - Authentication and Authorization: auth.md
+      - CI/CD Pipeline and Deployment Flow: ci-cd.md
       
     
 
